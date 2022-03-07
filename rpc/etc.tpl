@@ -3,12 +3,12 @@ ListenOn: 127.0.0.1:8080
 {{if .consul}}
 Consul:
   Host: 127.0.0.1:8500
-  Key: txpay.rpc
+  Key: {{.serviceName}}.rpc
   Check: grpc
   Meta:
     Protocol: grpc
   Tag:
-    -
+    - {{.serviceName}}
 {{else}}
 Etcd:
   Hosts:
