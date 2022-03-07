@@ -6,6 +6,7 @@ import (
 
 	{{.imports}}
 
+    {{if .check}}"google.golang.org/grpc/health/grpc_health_v1"{{end}}
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -25,6 +26,7 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		{{.pkg}}.Register{{.service}}Server(grpcServer, srv)
+        {{if .check}}grpc_health_v1.RegisterHealthServer(grpcServer, srv){{end}}
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
