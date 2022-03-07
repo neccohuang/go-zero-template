@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-    {{if .consul}}"github.com/copo888/channel_app/common/consul"{{end}}
+    {{if .consul}}"github.com/neccoys/go-zero-extension/consul"{{end}}
     {{if .check}}"google.golang.org/grpc/health/grpc_health_v1"{{end}}
+    "log"
 
 	{{.imports}}
 
@@ -46,7 +47,7 @@ func main() {
 	{{if .consul}}
 	// 注册Consul服务
     if err := consul.RegisterService(c.ListenOn, c.Consul); err != nil {
-        log.Println(">>>>>>>>>>", err)
+        log.Println("Consul Error:", err)
     }
     {{end}}
 
