@@ -4,7 +4,7 @@ ListenOn: 127.0.0.1:8080
 Consul:
   Host: 127.0.0.1:8500
   Key: {{.serviceName}}.rpc
-  Check: grpc
+  Check: {{if .check}}grpc{{else}}ttl{{end}}
   Meta:
     Protocol: grpc
   Tag:
