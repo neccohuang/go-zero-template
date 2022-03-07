@@ -7,5 +7,5 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-    {{if .consul}}consul consul.Conf{{end}}
+    {{if .consul}}Consul consul.Conf{{end}}
 }
