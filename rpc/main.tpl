@@ -3,10 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+    {{if .consul}}"github.com/copo888/channel_app/common/consul"{{end}}
+    {{if .check}}"google.golang.org/grpc/health/grpc_health_v1"{{end}}
 
 	{{.imports}}
 
-    {{if .check}}"google.golang.org/grpc/health/grpc_health_v1"{{end}}
+    "github.com/joho/godotenv"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -14,13 +16,20 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
+var (
+    configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
+    envFile    = flag.String("env", "etc/.env", "the env file")
+)
 
 func main() {
 	flag.Parse()
 
+    if err := godotenv.Load(*envFile); err != nil {
+        log.Fatal("Error loading .env file")
+    }
+
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	conf.MustLoad(*configFile, &c, conf.UseEnv())
 	ctx := svc.NewServiceContext(c)
 	srv := server.New{{.serviceNew}}Server(ctx)
 
@@ -33,6 +42,13 @@ func main() {
 		}
 	})
 	defer s.Stop()
+
+	{{if .consul}}
+	// 注册Consul服务
+    if err := consul.RegisterService(c.ListenOn, c.Consul); err != nil {
+        log.Println(">>>>>>>>>>", err)
+    }
+    {{end}}
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
