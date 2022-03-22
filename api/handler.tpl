@@ -2,21 +2,22 @@ package {{.PkgName}}
 
 import (
 	"net/http"
-	"{{.CommonPath}}/common/vaildx"
+	{{if .HasRequest}}"{{.CommonPath}}/common/vaildx"{{end}}
     "{{.CommonPath}}/common/responsex"
-    "encoding/json"
-	{{if .After1_1_10}}"github.com/zeromicro/go-zero/rest/httpx"{{end}}
-    "go.opentelemetry.io/otel/attribute"
+    {{if .HasRequest}}"encoding/json"{{end}}
+	{{if .After1_1_10}}{{if .HasRequest}}"github.com/zeromicro/go-zero/rest/httpx"{{end}}{{end}}
+    {{if .HasRequest}}"go.opentelemetry.io/otel/attribute"{{end}}
     "go.opentelemetry.io/otel/trace"
 	{{.ImportPackages}}
 )
 
 func {{.HandlerName}}(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		{{if .HasRequest}}var req types.{{.RequestType}}
 
 		span := trace.SpanFromContext(r.Context())
         defer span.End()
+
+		{{if .HasRequest}}var req types.{{.RequestType}}
 
         if err := httpx.ParseJsonBody(r, &req); err != nil {
             responsex.Json(w, r, responsex.FAIL, nil, err)
