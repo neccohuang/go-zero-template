@@ -2,12 +2,12 @@ package {{.PkgName}}
 
 import (
 	"net/http"
-	{{if .HasRequest}}"{{.CommonPath}}/common/vaildx"{{end}}
-    "{{.CommonPath}}/common/responsex"
-    {{if .HasRequest}}"encoding/json"{{end}}
-	{{if .After1_1_10}}{{if .HasRequest}}"github.com/zeromicro/go-zero/rest/httpx"{{end}}{{end}}
-    {{if .HasRequest}}"go.opentelemetry.io/otel/attribute"{{end}}
-    "go.opentelemetry.io/otel/trace"
+	{{if .HasRequest}}"{{.CommonPath}}/common/vaildx"
+    {{end}}"{{.CommonPath}}/common/responsex"
+    {{if .HasRequest}}"encoding/json"
+	{{end}}{{if .After1_1_10}}{{if .HasRequest}}"github.com/zeromicro/go-zero/rest/httpx"{{end}}{{end}}
+    {{if .HasRequest}}"go.opentelemetry.io/otel/attribute"
+    {{end}}"go.opentelemetry.io/otel/trace"
 	{{.ImportPackages}}
 )
 
